@@ -1,0 +1,55 @@
+version: '3.7'
+services:
+    es7-es-server1:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.0.0
+        container_name: elasticsearch
+        environment:
+            - node.name=elasticsearch
+            - discovery.seed_hosts=elasticsearch2
+            - cluster.initial_master_nodes=elasticsearch,elasticsearch2
+            - cluster.name=docker-cluster
+            - bootstrap.memory_lock=true
+            - "ES_JAVA_OPTS=-Xms1024m -Xmx1024m"
+            - "cluster.initial_master_nodes=elasticsearch"
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+        volumes:
+            - ~/volumes/es7demo/elasticsearch/:/usr/share/elasticsearch/data/
+        ports:
+            - 9200:9200
+            - 9300:9300
+        networks:
+            - esnet
+    es7-es-server2:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.0.0
+        container_name: elasticsearch2
+        environment:
+          - node.name=elasticsearch2
+          - discovery.seed_hosts=elasticsearch
+          - cluster.initial_master_nodes=elasticsearch,elasticsearch2
+          - cluster.name=docker-cluster
+          - bootstrap.memory_lock=true
+          - "ES_JAVA_OPTS=-Xms1024m -Xmx1024m"
+        ulimits:
+            memlock:
+              soft: -1
+              hard: -1
+        volumes:
+            - ~/volumes/es7demo/elasticsearch2/:/usr/share/elasticsearch/data/
+        networks:
+            - esnet
+    foodfacts-kibana:
+        image: docker.elastic.co/kibana/kibana:7.0.0
+        volumes:
+            - ~/volumes/es7demo/kibana/:/usr/share/kibana/data
+        ports:
+            - 5601:5601
+        networks:
+            - esnet
+        depends_on:
+            - es7-es-server1
+networks:
+    esnet:
+        driver: bridge
