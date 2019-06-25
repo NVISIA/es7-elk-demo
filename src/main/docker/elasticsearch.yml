@@ -1,7 +1,7 @@
 version: '3.7'
 services:
     es7-es-server1:
-        image: docker.elastic.co/elasticsearch/elasticsearch:7.0.0
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0
         container_name: elasticsearch
         environment:
             - node.name=elasticsearch
@@ -23,7 +23,7 @@ services:
         networks:
             - esnet
     es7-es-server2:
-        image: docker.elastic.co/elasticsearch/elasticsearch:7.0.0
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0
         container_name: elasticsearch2
         environment:
           - node.name=elasticsearch2
@@ -40,12 +40,25 @@ services:
             - ~/volumes/es7demo/elasticsearch2/:/usr/share/elasticsearch/data/
         networks:
             - esnet
-    foodfacts-kibana:
-        image: docker.elastic.co/kibana/kibana:7.0.0
+    es7-es-kibana:
+        image: docker.elastic.co/kibana/kibana:7.2.0
         volumes:
             - ~/volumes/es7demo/kibana/:/usr/share/kibana/data
         ports:
             - 5601:5601
+        networks:
+            - esnet
+        depends_on:
+            - es7-es-server1
+    es7-es-logstash:
+        image: docker.elastic.co/logstash/logstash:7.2.0
+        volumes:
+            - ~/volumes/es7demo/logstash/:/usr/share/logstash/data
+        environment:
+          - xpack.monitoring.enabled=true
+        ports:
+            - 5044:5044
+            - 9600:9600
         networks:
             - esnet
         depends_on:

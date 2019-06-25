@@ -1,0 +1,11 @@
+version: '2'
+services:
+  employeeportal-postgresql:
+    image: postgres:11.2
+    # volumes:
+    #     - ~/volumes/jhipster/EmployeePortal/postgresql/:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=EmployeePortal
+      - POSTGRES_PASSWORD=
+    ports:
+      - 5432:5432
