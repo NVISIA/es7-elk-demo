@@ -11,12 +11,15 @@ The folder src/main/docker contains the docker compose script for Elasticsearch,
 docker-compose -f src/main/docker/elasticsearch.yml up
 ```
 
-# Kibana Access
+# Kibana
 
 Once the Docker containers have been started up from the elasticsearch script, you can access Kibana from the following URL:
 
 http://localhost:5601/app/kibana
 
+# Logstash
+
+The Logstash server will start on port 5044. The API endpoint runs at port 9600.
 
 # CustomerPortal Project
 
